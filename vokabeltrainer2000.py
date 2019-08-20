@@ -2,7 +2,7 @@ from random import *
 import csv
 
 """
-vokabeltrainer2000, version 1
+vokabeltrainer2000, version 0.1
 written in python 3.7
 """
 
