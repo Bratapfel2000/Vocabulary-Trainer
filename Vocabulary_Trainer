@@ -1,0 +1,162 @@
+from random import *
+import csv
+
+
+"""
+Vocabulary-Trainer, Pre-Alpha, version vt_rel_008a
+written in python 3.7
+"""
+
+version = "0.08a"
+vocabulary_file = 'vokabeln2r.csv'
+    
+#csv file reader
+def readMyFile(filename):
+    lang1 = []
+    lang2 = []
+    with open(filename) as csvDataFile:
+        csvReader = csv.reader(csvDataFile)
+        for row in csvReader:
+            lang1.append(row[0])
+            lang2.append(row[1])
+    return lang1, lang2
+lang1,lang2 = readMyFile(vocabulary_file)
+
+def info():
+    print("With this vocabulary trainer you can train ")
+    print("your choice of specific words as often as you")
+    print("like. You can also choose which direction you ")
+    print("want to be tested and how many words randomly")
+    print("should show up.")
+    print(" ")
+    back_main()
+
+#menu command - show all words in dictionary
+def show_all():
+    lang1,lang2 = readMyFile(vocabulary_file)
+    for i in range(len(lang1)):
+        print(lang1[i], lang2[i])
+
+#wrong input error
+def wrong_input():
+    print(" ")
+    print("Wrong input. Try again")
+    print(" ")
+
+def back_main():
+    enter_menu = input("Press [Enter] to go back ")
+    if enter_menu == "":
+        print(" ")
+        commando()
+    else:
+        wrong_input()
+        back_main()
+#menu design
+def menu():
+    print(" ")
+    print("command                   key")
+    print("-----------------------------")
+    print("info                        i")
+    print("show complete dictionary    s")
+##    print("add new words               a")
+##    print("remove words                r")
+##    print("update words                u")
+    print("Back to main menu           m")
+    print(" ")
+    enter_menu = input("enter  key: ")
+    print(" ")
+    return enter_menu
+
+#menu commands
+def commando():
+    enter_cmd = menu()
+    if enter_cmd == "i":
+        return info()    
+    if enter_cmd == "m":
+        return start_screen()
+    if enter_cmd=="s":
+         show_all()
+         print(" ")
+         return back_main()
+    else:
+        wrong_input()
+        commando()
+
+#start screen options
+def start_screen():
+    print(" ")
+    print(" ------------------------------------------------")
+    print(" Vocabulary Trainer Version "+version)
+    print(" ------------------------------------------------")
+    print(" ")
+    eingabe = input("Press [Enter] to start or type 'cmd' for commands:")
+    if eingabe == "":
+        print(" ")
+        return lang1_lang2_count()
+    if eingabe == "cmd":
+        commando()
+    else:
+        wrong_input()
+        start_screen()
+
+#takes a random number from range of length of vocabulary_file
+def lang1_lang2_rand_picker():
+    lang1,lang2 = readMyFile(vocabulary_file)
+    length_dict =len(lang1)
+    rand_no = randint(0, length_dict-1)
+    return rand_no
+
+#how many vocabularies to check
+def how_many_words():
+    while True:
+      try:
+         enter_val  = int(input("How many words to check?: "))       
+      except ValueError:
+         wrong_input()
+         continue
+      else:
+         return enter_val 
+
+#decide languag1-lang2 or lan2-lan1        
+def direction_language():
+        eingabe_lan = input("En-Ger (1) or Ger-En (2): ")
+        if eingabe_lan == "1":
+            return True
+        if eingabe_lan == "2":
+            return False
+        else:
+            wrong_input()
+            return direction_language()
+
+#train words, count right or wrong
+def trainer(lang1, lang2,language):
+    j = 0
+    k = 0
+    howmany = how_many_words()
+    for i in range(howmany):
+        rand_no = lang1_lang2_rand_picker()
+        input_lang = input("What is '"+lang2[rand_no]+"' in " + language +"?: ")
+        if input_lang == lang1[rand_no]:
+            j += 1
+            print("Correct!")
+            print(" ")
+        else:
+            k += 1
+            print("Wrong. The Correct answer is: ", lang1[rand_no])
+            print(" ")
+    print(" ")
+    print(6*"-","Result", 6*"-")
+    print("Correct:",j, "Wrong:", k)
+    print(20*"-")
+    return "Ende"
+    
+#ask amount of words, in random direction
+def lang1_lang2_count():
+    lang1,lang2 = readMyFile(vocabulary_file)
+    if direction_language() == True:
+        trainer(lang2,lang1,"German")
+    else:
+        trainer(lang1,lang2,"English")
+##lang1_lang2_count()
+
+start_screen()
